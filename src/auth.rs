@@ -1,3 +1,5 @@
+use jsonwebtoken::{encode, errors::Result, Algorithm, EncodingKey, Header};
+
 // Claim for JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Claim {
@@ -8,7 +10,24 @@ pub struct Claim {
 
 // Session token, JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-pub struct AuthToken {}
+pub struct AuthToken {
+    jwt: String,
+}
+
+impl AuthToken {
+    pub fn new(claim: &Claim, secret: &str) -> Result<Self> {
+        let jwt = encode(
+            &Header::new(Algorithm::HS512),
+            claim,
+            &EncodingKey::from_secret(secret.as_bytes()),
+        )?;
+        Ok(Self { jwt })
+    }
+
+    pub fn jwt(&self) -> &str {
+        self.jwt.as_str()
+    }
+}
 
 // Remember me token, token should be stored with argon2 hash
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
