@@ -7,9 +7,9 @@ use ron;
 // Claim for JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Claim {
-    sub: String, // User
-    iat: u64,    // Issued at
-    exp: u64,    // Expires
+    pub sub: String, // User
+    pub iat: u64,    // Issued at
+    pub exp: u64,    // Expires
 }
 
 // Session token, JWT
@@ -44,16 +44,16 @@ pub enum FromError {
 // Remember me token, token should be stored with argon2 hash
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct PersistToken {
-    session: u64,
-    token: u64,
+    pub session: u64,
+    pub token: u64,
 }
 
 // Register an account, starting a session on success
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct RegisterRequest {
-    username: String,
-    password: String,
-    email: String,
+    pub username: String,
+    pub password: String,
+    pub email: String,
 }
 
 #[rocket::async_trait]
@@ -106,8 +106,8 @@ pub enum RegisterResponse {
 // Login to an account, returning a session on success
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct LoginRequest {
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[rocket::async_trait]
@@ -159,7 +159,7 @@ pub enum LoginResponse {
 // Renew a session, returning a new key on success
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct RenewRequest {
-    session: AuthToken,
+    pub session: AuthToken,
 }
 
 #[rocket::async_trait]
@@ -210,7 +210,7 @@ pub enum RenewResponse {
 // End a session
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct DisableRequest {
-    session: AuthToken,
+    pub session: AuthToken,
 }
 
 #[rocket::async_trait]
@@ -260,7 +260,7 @@ pub enum DisableResponse {
 // End All sessions
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct DisableAllRequest {
-    session: AuthToken,
+    pub session: AuthToken,
 }
 
 #[rocket::async_trait]
@@ -416,7 +416,7 @@ pub enum PersistResetRespone {
 // Request a password reset code to be sent to verified email
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct ResetCodeRequest {
-    username: String,
+    pub username: String,
 }
 
 #[rocket::async_trait]
@@ -468,9 +468,9 @@ pub enum ResetCodeResponse {
 // Request a password reset from an emailed code
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct ResetRequest {
-    username: String,
-    resetcode: String,
-    password: String,
+    pub username: String,
+    pub resetcode: String,
+    pub password: String,
 }
 
 #[rocket::async_trait]
