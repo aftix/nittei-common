@@ -102,6 +102,7 @@ impl<'r> FromData<'r> for RegisterRequest {
 pub enum RegisterResponse {
     Success(AuthToken),
     UsernameTaken,
+    InvalidUsername,
     WeakPassword,
     EmailTaken,
     Lockout,
