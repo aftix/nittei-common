@@ -1,11 +1,11 @@
 use jsonwebtoken::{encode, errors::Result, Algorithm, EncodingKey, Header};
 use ron;
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 use rocket::data::{Data, FromData, Outcome, ToByteUnit};
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 use rocket::http::{ContentType, Status};
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 use rocket::request::Request;
 
 // Claim for JWT
@@ -60,7 +60,7 @@ pub struct RegisterRequest {
     pub email: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for RegisterRequest {
     type Error = FromError;
@@ -115,7 +115,7 @@ pub struct LoginRequest {
     pub password: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for LoginRequest {
     type Error = FromError;
@@ -168,7 +168,7 @@ pub struct RenewRequest {
     pub session: AuthToken,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for RenewRequest {
     type Error = FromError;
@@ -220,7 +220,7 @@ pub struct DisableRequest {
     pub session: AuthToken,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for DisableRequest {
     type Error = FromError;
@@ -271,7 +271,7 @@ pub struct DisableAllRequest {
     pub session: AuthToken,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for DisableAllRequest {
     type Error = FromError;
@@ -323,7 +323,7 @@ pub struct PersistRequest {
     password: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for PersistRequest {
     type Error = FromError;
@@ -377,7 +377,7 @@ pub struct PersistResetRequest {
     password: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for PersistResetRequest {
     type Error = FromError;
@@ -430,7 +430,7 @@ pub struct ResetCodeRequest {
     pub username: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for ResetCodeRequest {
     type Error = FromError;
@@ -485,7 +485,7 @@ pub struct ResetRequest {
     pub password: String,
 }
 
-#[cfg(feature = "guard")]
+#[cfg(feature = "guards")]
 #[rocket::async_trait]
 impl<'r> FromData<'r> for ResetRequest {
     type Error = FromError;
