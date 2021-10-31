@@ -153,6 +153,7 @@ pub enum RegisterResponse {
     Success(AuthToken),
     UsernameTaken,
     InvalidUsername,
+    InvalidEmail,
     WeakPassword,
     EmailTaken,
     Lockout,
