@@ -58,8 +58,12 @@ impl AuthToken {
         if let Err(_) = claim {
             None
         } else {
-            Some(claim.unwrap())
+            Some(claim.unwrap().claims)
         }
+    }
+
+    pub fn to_string(self) -> String {
+        self.jwt
     }
 }
 
