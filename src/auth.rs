@@ -8,12 +8,20 @@ use rocket::http::{ContentType, Status};
 #[cfg(feature = "guards")]
 use rocket::request::Request;
 
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
+pub enum AuthLevel {
+    User,
+    Mod,
+    Admin,
+}
+
 // Claim for JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Claim {
-    pub sub: String, // User
-    pub iat: u64,    // Issued at
-    pub exp: u64,    // Expires
+    pub sub: String,     // User
+    pub iat: u64,        // Issued at
+    pub exp: u64,        // Expires
+    pub auth: AuthLevel, // User account level
 }
 
 // Session token, JWT
