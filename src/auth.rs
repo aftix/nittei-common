@@ -17,6 +17,26 @@ pub enum AuthLevel {
     Admin,
 }
 
+impl From<i32> for AuthLevel {
+    fn from(i: i32) -> Self {
+        match i {
+            1 => Self::Mod,
+            2 => Self::Admin,
+            _ => Self::User,
+        }
+    }
+}
+
+impl Into<i32> for AuthLevel {
+    fn into(self) -> i32 {
+        match self {
+            Self::User => 0,
+            Self::Mod => 1,
+            Self::Admin => 2,
+        }
+    }
+}
+
 // Claim for JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Claim {
