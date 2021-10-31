@@ -1,4 +1,6 @@
-use jsonwebtoken::{encode, errors::Result, Algorithm, EncodingKey, Header};
+use jsonwebtoken::{
+    decode, encode, errors::Result, Algorithm, DecodingKey, EncodingKey, Header, Validation,
+};
 use ron;
 
 #[cfg(feature = "guards")]
@@ -40,8 +42,24 @@ impl AuthToken {
         Ok(Self { jwt })
     }
 
-    pub fn jwt(&self) -> &str {
-        self.jwt.as_str()
+    pub fn from_jwt(jwt: &str) -> Self {
+        Self {
+            jwt: jwt.to_owned(),
+        }
+    }
+
+    pub fn authenticate(self, secret: &str) -> Option<Claim> {
+        let claim = decode::<Claim>(
+            &self.jwt,
+            &DecodingKey::from_secret(secret.as_ref()),
+            &Validation::default(),
+        );
+
+        if let Err(_) = claim {
+            None
+        } else {
+            Some(claim.unwrap())
+        }
     }
 }
 
