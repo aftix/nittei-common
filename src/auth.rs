@@ -324,8 +324,8 @@ pub enum DisableAllResponse {
 // Request a remember me token
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct PersistRequest {
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[cfg(feature = "guards")]
