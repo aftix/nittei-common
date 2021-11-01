@@ -150,7 +150,7 @@ impl<'r> FromData<'r> for RegisterRequest {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum RegisterResponse {
-    Success(AuthToken),
+    Success(AuthToken, Claim),
     UsernameTaken,
     InvalidUsername,
     InvalidEmail,
@@ -207,7 +207,7 @@ impl<'r> FromData<'r> for LoginRequest {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum LoginResponse {
-    Success(AuthToken),
+    Success(AuthToken, Claim),
     UsernameInvalid,
     PasswordWrong,
     LockedOut,
