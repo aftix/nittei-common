@@ -216,49 +216,6 @@ pub enum LoginResponse {
 
 // Renew a session, returning a new key on success
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-pub struct RenewRequest {
-    pub session: AuthToken,
-}
-
-#[cfg(feature = "guards")]
-#[rocket::async_trait]
-impl<'r> FromData<'r> for RenewRequest {
-    type Error = FromError;
-
-    async fn from_data(req: &'r Request<'_>, data: Data<'r>) -> Outcome<'r, Self> {
-        use rocket::outcome::Outcome::*;
-        use FromError::*;
-        // Check Content Type
-        let ct = ContentType::new("application", "x-renew-request");
-        if req.content_type() != Some(&ct) {
-            return Forward(data);
-        }
-
-        // Data size limit
-        let limit = req
-            .limits()
-            .get("renew-request")
-            .unwrap_or((512 as usize).bytes());
-
-        // Get the string out of the content
-        let string = match data.open(limit).into_string().await {
-            Ok(string) if string.is_complete() => string.into_inner(),
-            Ok(_) => return Failure((Status::PayloadTooLarge, TooLarge)),
-            Err(e) => return Failure((Status::InternalServerError, Io(e))),
-        };
-
-        // Parse the RON
-        let ret = ron::de::from_str::<RenewRequest>(&string);
-        if let Err(e) = ret {
-            return Failure((Status::BadRequest, Ron(e)));
-        }
-        let ret = ret.unwrap();
-
-        Success(ret)
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum RenewResponse {
     Success(AuthToken),
     Expired,
@@ -268,9 +225,7 @@ pub enum RenewResponse {
 
 // End a session
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-pub struct DisableRequest {
-    pub session: AuthToken,
-}
+pub struct DisableRequest {}
 
 #[cfg(feature = "guards")]
 #[rocket::async_trait]
@@ -319,9 +274,7 @@ pub enum DisableResponse {
 
 // End All sessions
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-pub struct DisableAllRequest {
-    pub session: AuthToken,
-}
+pub struct DisableAllRequest {}
 
 #[cfg(feature = "guards")]
 #[rocket::async_trait]
