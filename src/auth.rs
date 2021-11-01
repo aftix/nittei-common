@@ -57,7 +57,7 @@ impl AuthToken {
         let jwt = encode(
             &Header::new(Algorithm::HS512),
             claim,
-            &EncodingKey::from_secret(secret.as_bytes()),
+            &EncodingKey::from_secret(secret.as_ref()),
         )?;
         Ok(Self { jwt })
     }
