@@ -72,11 +72,10 @@ impl AuthToken {
         let claim = decode::<Claim>(
             &self.jwt,
             &DecodingKey::from_secret(secret.as_ref()),
-            &Validation::default(),
+            &Validation::new(Algorithm::HS512),
         );
 
         if claim.is_err() {
-            println!("{:?}", claim);
             None
         } else {
             Some(claim.unwrap().claims)
