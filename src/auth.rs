@@ -75,7 +75,8 @@ impl AuthToken {
             &Validation::default(),
         );
 
-        if let Err(_) = claim {
+        if claim.is_err() {
+            println!("{:?}", claim);
             None
         } else {
             Some(claim.unwrap().claims)
