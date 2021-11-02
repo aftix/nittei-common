@@ -422,7 +422,7 @@ impl<'r> FromData<'r> for PersistLoginRequest {
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum PersistLoginResponse {
-    Success(AuthToken),
+    Success(AuthToken, Claim),
     Lockout,
     InvalidSession,
     InvalidToken,
