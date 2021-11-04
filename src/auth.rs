@@ -211,7 +211,7 @@ impl<'r> FromData<'r> for LoginRequest {
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum LoginResponse {
     Success(AuthToken, Claim),
-    UsernameInvalid,
+    EmailInvalid,
     PasswordWrong,
     LockedOut,
     InvalidRequest,
