@@ -41,7 +41,8 @@ impl From<AuthLevel> for i32 {
 // Claim for JWT
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Claim {
-    pub sub: String,     // User
+    pub sub: String,     // User email
+    pub user: String,    // User name
     pub iat: u64,        // Issued at
     pub exp: u64,        // Expires
     pub auth: AuthLevel, // User account level
