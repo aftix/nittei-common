@@ -2,6 +2,7 @@ use jsonwebtoken::{
     decode, encode, errors::Result, Algorithm, DecodingKey, EncodingKey, Header, Validation,
 };
 use ron;
+use std::fmt::{self, Display, Formatter};
 
 #[cfg(feature = "guards")]
 use rocket::data::{Data, FromData, Outcome, ToByteUnit};
@@ -27,12 +28,12 @@ impl From<i32> for AuthLevel {
     }
 }
 
-impl Into<i32> for AuthLevel {
-    fn into(self) -> i32 {
-        match self {
-            Self::User => 0,
-            Self::Mod => 1,
-            Self::Admin => 2,
+impl From<AuthLevel> for i32 {
+    fn from(lvl: AuthLevel) -> Self {
+        match lvl {
+            AuthLevel::User => 0,
+            AuthLevel::Mod => 1,
+            AuthLevel::Admin => 2,
         }
     }
 }
@@ -50,6 +51,12 @@ pub struct Claim {
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct AuthToken {
     jwt: String,
+}
+
+impl Display for AuthToken {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.jwt)
+    }
 }
 
 impl AuthToken {
@@ -75,15 +82,11 @@ impl AuthToken {
             &Validation::new(Algorithm::HS512),
         );
 
-        if claim.is_err() {
-            None
+        if let Ok(claim) = claim {
+            Some(claim.claims)
         } else {
-            Some(claim.unwrap().claims)
+            None
         }
-    }
-
-    pub fn to_string(self) -> String {
-        self.jwt
     }
 }
 
@@ -163,7 +166,7 @@ pub enum RegisterResponse {
 // Login to an account, returning a session on success
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct LoginRequest {
-    pub username: String,
+    pub email: String,
     pub password: String,
 }
 
@@ -378,7 +381,7 @@ pub enum PersistResponse {
 // Request to login with remember me token
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct PersistLoginRequest {
-    pub username: String,
+    pub email: String,
     pub token: PersistToken,
 }
 
@@ -485,7 +488,7 @@ pub enum PersistResetRespone {
 // Request a password reset code to be sent to verified email
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct ResetCodeRequest {
-    pub username: String,
+    pub email: String,
 }
 
 #[cfg(feature = "guards")]
@@ -538,7 +541,7 @@ pub enum ResetCodeResponse {
 // Request a password reset from an emailed code
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct ResetRequest {
-    pub username: String,
+    pub email: String,
     pub resetcode: String,
     pub password: String,
 }
