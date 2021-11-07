@@ -628,7 +628,7 @@ impl<'r> FromData<'r> for VerifyRequest {
         };
 
         // Parse the RON
-        let ret = ron::de::from_str::<ResetRequest>(&string);
+        let ret = ron::de::from_str::<VerifyRequest>(&string);
         if let Err(e) = ret {
             return Failure((Status::BadRequest, Ron(e)));
         }
