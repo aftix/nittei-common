@@ -643,4 +643,5 @@ pub enum VerifyResponse {
     Success,
     BadCode,
     BadUser,
+    ExpiredCode,
 }
