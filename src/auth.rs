@@ -645,3 +645,53 @@ pub enum VerifyResponse {
     BadUser,
     ExpiredCode,
 }
+
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
+pub struct MakeResetRequest {
+    pub email: String,
+}
+
+#[cfg(feature = "guards")]
+#[rocket::async_trait]
+impl<'r> FromData<'r> for MakeResetRequest {
+    type Error = FromError;
+
+    async fn from_data(req: &'r Request<'_>, data: Data<'r>) -> Outcome<'r, Self> {
+        use rocket::outcome::Outcome::*;
+        use FromError::*;
+        // Check Content Type
+        let ct = ContentType::new("application", "x-make-reset-request");
+        if req.content_type() != Some(&ct) {
+            return Forward(data);
+        }
+
+        // Data size limit
+        let limit = req
+            .limits()
+            .get("make-reset-request")
+            .unwrap_or((512 as usize).bytes());
+
+        // Get the string out of the content
+        let string = match data.open(limit).into_string().await {
+            Ok(string) if string.is_complete() => string.into_inner(),
+            Ok(_) => return Failure((Status::PayloadTooLarge, TooLarge)),
+            Err(e) => return Failure((Status::InternalServerError, Io(e))),
+        };
+
+        // Parse the RON
+        let ret = ron::de::from_str::<MakeResetRequest>(&string);
+        if let Err(e) = ret {
+            return Failure((Status::BadRequest, Ron(e)));
+        }
+        let ret = ret.unwrap();
+
+        Success(ret)
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
+pub enum MakeResetResponse {
+    Success,
+    EmailUnverified,
+    BadEmail,
+}
